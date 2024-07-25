@@ -9,9 +9,11 @@ export default function Home() {
   const { numero, incrementar, decrementar } = useCarrinho()
   return (
     <Pagina>
-      {produtos.map(produto => (
-        <CartaoProduto key={produto.id} produto={produto} />
-      ))}
+      <div className="flex flex-wrap gap-5 justify-center">
+        {produtos.map(produto => (
+          <CartaoProduto key={produto.id} produto={produto} />
+        ))}
+      </div>
     </Pagina>
   );
 }
