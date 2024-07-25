@@ -1,6 +1,7 @@
-import { createContext, useState } from "react"
+import { createContext, useEffect, useState } from "react"
 import ItemCarrinho from "../model/ItemCarrinho"
 import Produto from "../model/Produto"
+import useLocalStorage from "../hooks/useLocalStorage"
 
 interface ContextoCarrinhoProps {
     itens: ItemCarrinho[]
@@ -14,16 +15,24 @@ const ContextoCarrinho = createContext<ContextoCarrinhoProps>({} as any)
 export function ProvedorCarrinho(props: any) {
 
     const [itens, setItens] = useState<ItemCarrinho[]>([])
+    const { set, get } = useLocalStorage()
+
+    useEffect(() => {
+        const carrinho = get('carrinho')
+        if (carrinho) {
+            setItens(carrinho)
+        }
+    }, [get])
 
     function adicionar(produto: Produto) {
         const indice = itens.findIndex((i) => i.produto.id === produto.id)
 
         if (indice === -1) {
-            setItens([...itens, { produto, quantidade: 1 }])
+            alterarItens([...itens, { produto, quantidade: 1 }])
         } else {
             const novosItens = [...itens]
             novosItens[indice].quantidade++
-            setItens(novosItens)
+            alterarItens(novosItens)
         }
     }
 
@@ -34,7 +43,12 @@ export function ProvedorCarrinho(props: any) {
             }
             return i
         }).filter((i) => i.quantidade > 0)
+        alterarItens(novosItens)
+    }
+
+    function alterarItens(novosItens: ItemCarrinho[]) {
         setItens(novosItens)
+        set('carrinho', novosItens)
     }
 
     return <ContextoCarrinho.Provider value={{
