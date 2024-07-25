@@ -6,7 +6,7 @@ import useCarrinho from "@/data/hooks/useCarrinho";
 
 export default function PaginaCarrinho() {
 
-    const { itens, adicionar } = useCarrinho()
+    const { itens, adicionar, remover } = useCarrinho()
 
     return (
         <Pagina>
@@ -16,6 +16,7 @@ export default function PaginaCarrinho() {
                         key={item.produto.id}
                         item={item}
                         adicionar={(item) => adicionar(item.produto)}
+                        remover={(item) => remover(item.produto)}
                     />
                 )}
             </div>
